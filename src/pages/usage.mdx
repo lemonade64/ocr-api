@@ -21,9 +21,12 @@ const axios = require("axios");
 
 async function extractText(imageData) {
   try {
-    const response = await axios.post("https://localhost:3000/api/ocr", {
-      imageData: imageData,
-    });
+    const response = await axios.post(
+      "https://perception-ocr.vercel.app/api/ocr",
+      {
+        imageData: imageData,
+      }
+    );
     console.info("Extracted Text:", response.data.text);
   } catch (e) {
     console.error("Error Extracting Text:", e.message);

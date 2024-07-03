@@ -17,12 +17,12 @@ export const metadata = {
   description:
     "API for extracting text from images encoded in base64 using Optical Character Recognition (OCR).",
   category: "technology",
-  metadataBase: new URL(""),
+  metadataBase: new URL("https://perception-ocr.vercel.app/"),
   openGraph: {
     title: "Perception",
     description:
       "API for extracting text from images encoded in base64 using Optical Character Recognition (OCR).",
-    url: "",
+    url: "https://perception-ocr.vercel.app/",
     siteName: "OCR API",
     locale: "en_AU",
     type: "website",
