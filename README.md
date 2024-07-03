@@ -1,36 +1,60 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Overview
 
-## Getting Started
+Perception is an API route designed for Optical Character Recognition (OCR) from base64 encoded images. It integrates [**base64-to-image**](https://www.npmjs.com/package/base64-to-image) and [**tesseract.js**](https://www.npmjs.com/package/tesseract.js/v/2.1.1):
 
-First, run the development server:
+- [**base64-to-image**](https://www.npmjs.com/package/base64-to-image): decodes base64 image data into a file format recognisable by tesseract.js.
+- [**tesseract.js**](https://www.npmjs.com/package/tesseract.js/v/2.1.1): utilises the Tesseract OCR engine to accurately extract text from images.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+Perception simplifies the process of extracting text from images by combining these libraries, to provides a simple method for developers to integrate OCR functionality into their applications.
+
+# Getting Started with Perception
+
+Perception provides a simple way to extract text from images using tesseract.js.
+
+Perception operates by receiving a POST request containing base64 data of the chosen image. The data is subsequently processed using tesseract.js to extract any textual content from the image. The results are then delivered to the user through the response body as a JSON object.
+
+## Authentication
+
+Currently, Perception does not require authentication. However, please ensure that your application securely handles both image data and API responses.
+
+## Sending a POST Request
+
+To extract text from an image, send a POST request to the Perception endpoint with the image data encoded in base64 format. Here’s an example using `node`:
+
+```javascript
+const axios = require("axios");
+
+async function extractText(imageData) {
+  try {
+    const response = await axios.post("https://localhost:3000/api/ocr", {
+      imageData: imageData,
+    });
+    console.info("Extracted Text:", response.data.text);
+  } catch (e) {
+    console.error("Error Extracting Text:", e.message);
+  }
+}
+
+const base64ImageData = "...";
+extractText(base64ImageData);
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Replace `base64ImageData` with your base64 image data.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Processing the Request
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+Upon receiving the POST request, Perception processes the image using tesseract.js to extract any text present. The extracted text is then returned in the response body as a JSON object.
 
-## Learn More
+## Handling the Response
 
-To learn more about Next.js, take a look at the following resources:
+The JSON response will contain the extracted text from the image. Here’s an example response:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```json
+{
+  "response": "Extracted Text."
+}
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+## Error Handling
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+In case of errors, such as invalid image data or processing issues, Perception API will return an appropriate HTTP status code along with an error message in the response body.
