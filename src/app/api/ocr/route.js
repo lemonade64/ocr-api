@@ -8,7 +8,7 @@ export async function POST(req) {
   }
   const data = await req.json();
 
-  const base64String = data.base64;
+  const base64String = data.imageData;
   const path = "./public/";
   const imageInformation = { fileName: "OCRImage", type: "png" };
   const imageInfo = base64ToImage(base64String, path, imageInformation);

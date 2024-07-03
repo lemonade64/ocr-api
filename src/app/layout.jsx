@@ -11,15 +11,15 @@ const poppins = Poppins({
 
 export const metadata = {
   title: {
-    template: "OCR API - %s",
-    default: "OCR API",
+    template: "%s - Perception",
+    default: "Perception",
   },
   description:
     "API for extracting text from images encoded in base64 using Optical Character Recognition (OCR).",
   category: "technology",
   metadataBase: new URL(""),
   openGraph: {
-    title: "OCR API",
+    title: "Perception",
     description:
       "API for extracting text from images encoded in base64 using Optical Character Recognition (OCR).",
     url: "",
