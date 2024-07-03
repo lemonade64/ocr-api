@@ -1,0 +1,59 @@
+import { Callout, Steps } from "nextra/components";
+
+# Getting Started with Perception
+
+Perception provides a simple way to extract text from images using tesseract.js.
+
+Perception operates by receiving a POST request containing base64 data of the chosen image. The data is subsequently processed using tesseract.js to extract any textual content from the image. The results are then delivered to the user through the response body as a JSON object.
+
+<Steps>
+
+### Authentication
+
+Currently, Perception does not require authentication. However, please ensure that your application securely handles both image data and API responses.
+
+### Sending a POST Request
+
+To extract text from an image, send a POST request to the Perception endpoint with the image data encoded in base64 format. Here’s an example using `node`:
+
+```javascript {14} copy showLineNumbers filename="example.js"
+const axios = require("axios");
+
+async function extractText(imageData) {
+  try {
+    const response = await axios.post("https://localhost:3000/api/ocr", {
+      imageData: imageData,
+    });
+    console.info("Extracted Text:", response.data.text);
+  } catch (e) {
+    console.error("Error Extracting Text:", e.message);
+  }
+}
+
+const base64ImageData = "...";
+extractText(base64ImageData);
+```
+
+<Callout type="info">
+  Replace `base64ImageData` with your base64 image data.
+</Callout>
+
+### Processing the Request
+
+Upon receiving the POST request, Perception processes the image using tesseract.js to extract any text present. The extracted text is then returned in the response body as a JSON object.
+
+### Handling the Response
+
+The JSON response will contain the extracted text from the image. Here’s an example response:
+
+```json copy showLineNumbers
+{
+  "response": "Extracted Text."
+}
+```
+
+### Error Handling
+
+In case of errors, such as invalid image data or processing issues, Perception API will return an appropriate HTTP status code along with an error message in the response body.
+
+</Steps>
