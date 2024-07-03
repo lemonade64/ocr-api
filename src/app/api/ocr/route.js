@@ -13,7 +13,8 @@ export async function POST(req) {
   const imageInformation = { fileName: "OCRImage", type: "png" };
   const imageInfo = base64ToImage(base64String, path, imageInformation);
 
-  const imagePath = path + imageInfo.fileName;
+  // const imagePath = path + imageInfo.fileName;
+  const imagePath = "/" + imageInfo.fileName;
 
   async function recogniseText(imagePath) {
     function logger(m) {
