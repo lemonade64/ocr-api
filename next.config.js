@@ -1,4 +1,12 @@
-/** @type {import('next').NextConfig} */
+const withNextra = require("nextra")({
+  theme: "nextra-theme-docs",
+  themeConfig: "./theme.config.js",
+  latex: true,
+  flexsearch: {
+    codeblock: false,
+  },
+});
+
 const nextConfig = {
   experimental: {
     serverComponentsExternalPackages: ["tesseract.js"],
@@ -8,4 +16,4 @@ const nextConfig = {
   },
 };
 
-export default nextConfig;
+module.exports = withNextra(nextConfig);
