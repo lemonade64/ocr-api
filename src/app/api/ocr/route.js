@@ -1,6 +1,6 @@
 const base64ToImage = require("base64-to-image");
 import { NextResponse } from "next/server";
-import Tesseract from "tesseract.js";
+import convertor from "@/lib/convertor";
 
 export async function POST(req) {
   if (req.method !== "POST") {
@@ -13,20 +13,26 @@ export async function POST(req) {
   const imageInformation = { fileName: "OCRImage", type: "png" };
   const imageInfo = base64ToImage(base64String, path, imageInformation);
 
-  // const imagePath = path + imageInfo.fileName;
-  const imagePath = "/" + imageInfo.fileName;
+  const imagePath = path + imageInfo.fileName;
+
+  // async function recogniseText(imagePath) {
+  //   function logger(m) {
+  //     console.info(m);
+  //   }
+
+  //   try {
+  //     const result = await Tesseract.recognize(imagePath, "eng", { logger });
+  //     return result.data.text;
+  //   } catch (e) {
+  //     console.error("Error Recognising Text:", e);
+  //   }
+  // }
 
   async function recogniseText(imagePath) {
-    function logger(m) {
-      console.info(m);
-    }
-
-    try {
-      const result = await Tesseract.recognize(imagePath, "eng", { logger });
-      return result.data.text;
-    } catch (e) {
-      console.error("Error Recognising Text:", e);
-    }
+    return convertor(imagePath).then((result) => {
+      console.info(result);
+      return result;
+    });
   }
 
   const text = (await recogniseText(imagePath)) ?? "No Text Found";
