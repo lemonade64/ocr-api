@@ -8,6 +8,9 @@ const withNextra = require("nextra")({
 });
 
 const nextConfig = {
+  serverRuntimeConfig: {
+    PROJECT_ROOT: __dirname,
+  },
   experimental: {
     serverComponentsExternalPackages: ["tesseract.js"],
     outputFileTracingIncludes: {
