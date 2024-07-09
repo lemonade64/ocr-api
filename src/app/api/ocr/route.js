@@ -1,6 +1,7 @@
 const base64ToImage = require("base64-to-image");
 import { NextResponse } from "next/server";
 import convertor from "@/lib/convertor";
+import fs from "fs";
 
 const env = process.env.NODE_ENV;
 
@@ -10,13 +11,15 @@ export async function POST(req) {
   }
   const data = await req.json();
   const base64String = data.imageData;
-
-  const imageRoot = env === "development" ? "./" : "/tmp/";
-  const imageInformation = { fileName: "OCRImage", type: "png" };
-  const output = base64ToImage(base64String, imageRoot, imageInformation);
-
+  const base64Data = base64String.replace(/^data:image\/\w+;base64,/, "");
+  const buffer = Buffer.from(base64Data, "base64");
   const imagePath =
     env === "development" ? "./public/OCRImage.png" : "/tmp/OCRImage.png";
+  fs.writeFile(imagePath, buffer, "base64", function (err) {
+    if (err) {
+      console.error(`Error writing image to ${imagePath}: ${err.message}`, err);
+    }
+  });
 
   async function recogniseText(imagePath) {
     return convertor(imagePath).then((result) => {
