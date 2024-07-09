@@ -4,9 +4,6 @@ import convertor from "@/lib/convertor";
 import path from "path";
 
 const env = process.env.NODE_ENV;
-const directory = process.cwd();
-console.info(directory);
-console.info(path.join(directory, "OCRImage.png"));
 
 export async function POST(req) {
   if (req.method !== "POST") {
@@ -18,7 +15,7 @@ export async function POST(req) {
   const imagePath =
     env === "development"
       ? "./public/OCRImage.png"
-      : path.join(directory, "OCRImage.png");
+      : path.join(__dirname, `../../tmp/`);
   const image = converBase64ToImage(base64String, imagePath);
 
   async function recogniseText(imagePath) {
