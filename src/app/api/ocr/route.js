@@ -15,7 +15,7 @@ export async function POST(req) {
   const imagePath =
     env === "development"
       ? "./public/OCRImage.png"
-      : path.join("/tmp", "OCRImage.json");
+      : "/../../../../../tmp/OCRImage.png";
   const image = converBase64ToImage(base64String, imagePath);
 
   async function recogniseText(imagePath) {
