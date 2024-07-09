@@ -8,6 +8,9 @@ const withNextra = require("nextra")({
 });
 
 const nextConfig = {
+  images: {
+    unoptimized: true,
+  },
   serverRuntimeConfig: {
     PROJECT_ROOT: __dirname,
   },

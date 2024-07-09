@@ -1,7 +1,12 @@
 import { converBase64ToImage } from "convert-base64-to-image";
 import { NextResponse } from "next/server";
 import convertor from "@/lib/convertor";
+import path from "path";
 import getConfig from "next/config";
+
+const root = getConfig().serverRuntimeConfig.PROJECT_ROOT;
+const env = process.env.NODE_ENV;
+console.info(root, env);
 
 export async function POST(req) {
   if (req.method !== "POST") {
@@ -10,7 +15,10 @@ export async function POST(req) {
   const data = await req.json();
   const base64String = data.imageData;
 
-  const imagePath = "./public/OCRImage.png";
+  const imagePath =
+    env === "development"
+      ? "./public/OCRImage.png"
+      : path.join(getConfig().serverRuntimeConfig.PROJECT_ROOT, "OCRImage.png");
   const image = converBase64ToImage(base64String, imagePath);
 
   async function recogniseText(imagePath) {
@@ -19,8 +27,6 @@ export async function POST(req) {
       return result;
     });
   }
-
-  console.info(getConfig().serverRuntimeConfig.PROJECT_ROOT);
 
   const text = await recogniseText(imagePath);
   const sanitisedText = text.replace(/\n/g, " ");
