@@ -1,8 +1,6 @@
-import { converBase64ToImage } from "convert-base64-to-image";
+const base64ToImage = require("base64-to-image");
 import { NextResponse } from "next/server";
 import convertor from "@/lib/convertor";
-import path from "path";
-import { writeFileSync } from "fs";
 
 const env = process.env.NODE_ENV;
 
@@ -13,11 +11,12 @@ export async function POST(req) {
   const data = await req.json();
   const base64String = data.imageData;
 
+  const imageRoot = env === "development" ? "./" : "/tmp/";
+  const imageInformation = { fileName: "OCRImage", type: "png" };
+  const output = base64ToImage(base64String, imageRoot, imageInformation);
+
   const imagePath =
     env === "development" ? "./public/OCRImage.png" : "/tmp/OCRImage.png";
-  // const image = converBase64ToImage(base64String, imagePath);
-
-  writeFileSync("/tmp/test.txt", "test");
 
   async function recogniseText(imagePath) {
     return convertor(imagePath).then((result) => {
@@ -27,8 +26,7 @@ export async function POST(req) {
   }
 
   const text = await recogniseText(imagePath);
-  // const sanitisedText = text.replace(/\n/g, " ");
-  const sanitisedText = "testing";
+  const sanitisedText = text.replace(/\n/g, " ");
 
   try {
     return NextResponse.json({
