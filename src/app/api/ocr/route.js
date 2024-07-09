@@ -1,4 +1,3 @@
-const base64ToImage = require("base64-to-image");
 import { NextResponse } from "next/server";
 import convertor from "@/lib/convertor";
 import fs from "fs";
