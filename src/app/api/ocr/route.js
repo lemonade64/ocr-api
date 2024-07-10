@@ -10,6 +10,7 @@ export async function POST(req) {
   }
   const data = await req.json();
   const base64String = data.imageData;
+
   const base64Data = base64String.replace(/^data:image\/\w+;base64,/, "");
   const buffer = Buffer.from(base64Data, "base64");
   const imagePath =
