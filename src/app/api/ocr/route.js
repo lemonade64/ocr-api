@@ -1,5 +1,3 @@
-import { track } from "@vercel/analytics/server";
-import { reportValue } from "@vercel/flags";
 import { NextResponse } from "next/server";
 import convertor from "@/lib/convertor";
 import fs from "fs";
@@ -34,9 +32,6 @@ export async function POST(req) {
 
   const text = await recogniseText(imagePath);
   const sanitisedText = text.replace(/\n/g, " ");
-
-  reportValue("OCR Text", sanitisedText);
-  track("OCR Texts", {}, { flags: ["OCR Text"] });
 
   try {
     return NextResponse.json({
