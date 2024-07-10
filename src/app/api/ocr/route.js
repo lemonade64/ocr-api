@@ -3,7 +3,7 @@ import convertor from "@/lib/convertor";
 import fs from "fs";
 
 const env = process.env.NODE_ENV;
-
+export const maxDuration = 60;
 export async function POST(req) {
   if (req.method !== "POST") {
     return NextResponse.json({ error: "POST ONLY" }, { status: 405 });
