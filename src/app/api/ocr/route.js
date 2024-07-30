@@ -25,17 +25,26 @@ export async function POST(req) {
 
   async function recogniseText(imagePath) {
     return convertor(imagePath).then((result) => {
-      console.info(result);
       return result;
     });
   }
 
   const text = await recogniseText(imagePath);
   const sanitisedText = text.replace(/\n/g, " ");
+  const percentEncodedText = encodeURIComponent(text);
+
+  const outputOption = data.outputOption;
+
+  const response =
+    outputOption === "sanitised"
+      ? sanitisedText
+      : outputOption === "percentEncoded"
+      ? percentEncodedText
+      : text;
 
   try {
     return NextResponse.json({
-      response: sanitisedText,
+      response: response,
     });
   } catch (e) {
     console.error(e);
