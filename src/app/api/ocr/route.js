@@ -6,11 +6,11 @@ export const dynamic = "force-dynamic";
 export const maxDuration = 60;
 
 export async function POST(req) {
-  try {
-    if (req.method !== "POST") {
-      return NextResponse.json({ error: "POST ONLY" }, { status: 405 });
-    }
+  if (req.method !== "POST") {
+    return NextResponse.json({ error: "POST ONLY" }, { status: 405 });
+  }
 
+  try {
     const { imageData, outputOptions } = await req.json();
     if (!Array.isArray(outputOptions)) {
       return Response.json(
