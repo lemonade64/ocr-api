@@ -1,51 +1,36 @@
 import { NextResponse } from "next/server";
 import convertor from "@/lib/convertor";
-import fs from "fs";
+import fs from "fs/promises";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 60;
 
-const env = process.env.NODE_ENV;
 export async function POST(req) {
-  if (req.method !== "POST") {
-    return NextResponse.json({ error: "POST ONLY" }, { status: 405 });
-  }
-  const data = await req.json();
-  const base64String = data.imageData;
-
-  const base64Data = base64String.replace(/^data:image\/\w+;base64,/, "");
-  const buffer = Buffer.from(base64Data, "base64");
-  const imagePath =
-    env === "development" ? "./public/OCRImage.png" : "/tmp/OCRImage.png";
-  fs.writeFileSync(imagePath, buffer, "base64", function (err) {
-    if (err) {
-      console.error(`Error writing image to ${imagePath}: ${err.message}`, err);
-    }
-  });
-
-  async function recogniseText(imagePath) {
-    return convertor(imagePath).then((result) => {
-      return result;
-    });
-  }
-
-  const text = await recogniseText(imagePath);
-  const sanitisedText = text.replace(/\n/g, " ");
-  const percentEncodedText = encodeURIComponent(text);
-
-  const outputOption = data.outputOption;
-
-  const response =
-    outputOption === "sanitised"
-      ? sanitisedText
-      : outputOption === "percentEncoded"
-      ? percentEncodedText
-      : text;
-
   try {
-    return NextResponse.json({
-      response: response,
-    });
+    if (req.method !== "POST") {
+      return NextResponse.json({ error: "POST ONLY" }, { status: 405 });
+    }
+
+    const { imageData, outputOption } = await req.json();
+    const buffer = Buffer.from(imageData.split(",")[1], "base64url");
+
+    const imagePath =
+      process.env.NODE_ENV === "development"
+        ? "./public/OCRImage.png"
+        : "/tmp/OCRImage.png";
+
+    await fs.writeFile(imagePath, buffer);
+
+    const text = await convertor(imagePath);
+
+    const responseMap = {
+      sanitised: text.replace(/\n/g, " "),
+      percentEncoded: encodeURIComponent(text),
+    };
+
+    const response = responseMap[outputOption] || text;
+
+    return NextResponse.json({ response });
   } catch (e) {
     console.error(e);
     return NextResponse.json(
